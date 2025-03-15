@@ -1,10 +1,10 @@
 <?php
 
+<?php
+
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\Ifixit;
 
@@ -15,11 +15,13 @@ class IfixitSeeder extends Seeder
      */
     public function run(): void
     {
-        $offset= 0;
+        $offset = 0;
+        $limit = 20;  // Limitar a 20 tutoriales
 
-        $endpoint = 'https://www.ifixit.com/api/2.0/guides?limit=200&offset='.$offset; // Reemplaza con la URL correcta
+        $endpoint = 'https://www.ifixit.com/api/2.0/guides?limit=' . $limit . '&offset=' . $offset;
         $response = Http::get($endpoint);
-        while($response->successful() && strlen(json_encode($response->json())) > 50){
+
+        // Si la respuesta es exitosa, procesar los tutoriales
         if ($response->successful()) {
             $guides = $response->json();
 
@@ -45,15 +47,12 @@ class IfixitSeeder extends Seeder
                         'username' => $guide['username'],
                         'flags' => json_encode($guide['flags']),
                         'image' => json_encode($guide['image']),
+                        'steps' => isset($guide['steps']) ? json_encode($guide['steps']) : null, // Asegúrate de que 'steps' esté presente
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]
                 );
             }
         }
-        $offset += 200;
-        $endpoint = 'https://www.ifixit.com/api/2.0/guides?limit=200&offset='.$offset; // Reemplaza con la URL correcta
-        $response = Http::get($endpoint);
-    }
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Database\Seeders\IfixitSeeder; 
+use Database\Seeders\GuideSeeder; 
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,12 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Crear un usuario de prueba
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Llamar al IfixitSeeder para poblar la tabla ifixits
         $this->call(IfixitSeeder::class);
+
+        // Llamar al GuideSeeder para poblar la tabla guides
+        $this->call(GuideSeeder::class);
     }
 }
